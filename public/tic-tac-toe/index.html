@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AJMOL VIP RUMMY - Tic Tac Toe</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial;text-align:center;padding:18px}
+h1{color:#FFD36A}
+h2{color:#D4AF37}
+button,select{background:#171717;color:#FFD36A;border:1px solid #D4AF37;border-radius:10px;padding:13px;font-size:16px;margin:5px}
+button:disabled{opacity:.4}
+#board{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:330px;margin:25px auto}
+.cell{height:100px;font-size:42px;font-weight:bold;background:#171717;border:2px solid #D4AF37;border-radius:14px}
+#message{color:#FFD36A;font-size:20px;min-height:35px}
+#settings{margin:20px auto}
+a{color:#FFD36A}
+</style>
+</head>
+<body>
+<h1>👑 AJMOL VIP RUMMY</h1>
+<h2>⭕ TIC TAC TOE ❌</h2>
+
+<div id="settings">
+<p>Choose Game Mode</p>
+<button onclick="startGame('computer')">🤖 Play with Computer</button>
+<button onclick="startGame('two')">👥 2 Players</button>
+<div id="difficulty" style="display:none">
+<p>Choose Difficulty</p>
+<select id="level">
+<option value="easy">Easy</option>
+<option value="hard">Hard</option>
+<option value="over">Over Hard</option>
+</select>
+</div>
+</div>
+
+<p id="status">Choose your game mode!</p>
+<div id="board">
+<button class="cell" onclick="play(0)"></button>
+<button class="cell" onclick="play(1)"></button>
+<button class="cell" onclick="play(2)"></button>
+<button class="cell" onclick="play(3)"></button>
+<button class="cell" onclick="play(4)"></button>
+<button class="cell" onclick="play(5)"></button>
+<button class="cell" onclick="play(6)"></button>
+<button class="cell" onclick="play(7)"></button>
+<button class="cell" onclick="play(8)"></button>
+</div>
+
+<p id="message">Good Luck!</p>
+<button onclick="restart()">🔄 New Game</button>
+<br><br>
+<a href="/home/">← Back to Home</a>
+
+<script>
+let board=Array(9).fill("");
+let mode="";
+let turn="X";
+let active=false;
+
+const cells=document.querySelectorAll(".cell");
+const wins=[
+[0,1,2],[3,4,5],[6,7,8],
+[0,3,6],[1,4,7],[2,5,8],
+[0,4,8],[2,4,6]
+];
+
+function startGame(m){
+ mode=m;
+ document.getElementById("difficulty").style.display=
+ m==="computer"?"block":"none";
+ restart();
+}
+
+function result(){
+ for(let line of wins){
+  if(board[line[0]] &&
+  board[line[0]]===board[line[1]] &&
+  board[line[1]]===board[line[2]]){
+   return board[line[0]];
+  }
+ }
+ return board.every(x=>x!=="")?"draw":null;
+}
+
+function play(i){
+ if(!active || board[i])return;
+ move(i);
+ if(active && mode==="computer" && turn==="O"){
+  setTimeout(computerMove,350);
+ }
+}
+
+function move(i){
+ board[i]=turn;
+ cells[i].innerText=turn;
+ let r=result();
+
+ if(r){
+  active=false;
+  document.getElementById("message").innerText=
+   r==="draw"?"🤝 Match Draw!": "🎉 Player "+r+" Wins!";
+  document.getElementById("status").innerText="Game Over";
+  return;
+ }
+ turn=turn==="X"?"O":"X";
+ document.getElementById("status").innerText=
+ mode==="computer"?
+ (turn==="X"?"Your Turn (X)":"Computer's Turn (O)"):
+ "Player "+turn+"'s Turn";
+}
+
+function computerMove(){
+ if(!active)return;
+ let empty=board.map((v,i)=>v===""?i:-1).filter(i=>i!==-1);
+ let level=document.getElementById("level").value;
+ let choice;
+
+ if(level==="easy"){
+  choice=empty[Math.floor(Math.random()*empty.length)];
+ }else if(level==="hard"){
+  choice=findMove("O")??findMove("X")??empty[Math.floor(Math.random()*empty.length)];
+ }else{
+  choice=bestMove();
+ }
+ move(choice);
+}
+
+function findMove(mark){
+ for(let i=0;i<9;i++){
+  if(board[i]===""){
+   board[i]=mark;
+   let won=result()===mark;
+   board[i]="";
+   if(won)return i;
+  }
+ }
+ return null;
+}
+
+function minimax(b,isMax){
+ let r=checkBoard(b);
+ if(r==="O")return 10;
+ if(r==="X")return -10;
+ if(r==="draw")return 0;
+
+ if(isMax){
+  let best=-100;
+  for(let i=0;i<9;i++)if(!b[i]){
+   b[i]="O";best=Math.max(best,minimax(b,false));b[i]="";
+  }
+  return best;
+ }else{
+  let best=100;
+  for(let i=0;i<9;i++)if(!b[i]){
+   b[i]="X";best=Math.min(best,minimax(b,true));b[i]="";
+  }
+  return best;
+ }
+}
+
+function checkBoard(b){
+ for(let line of wins){
+  if(b[line[0]] && b[line[0]]===b[line[1]] && b[line[1]]===b[line[2]])return b[line[0]];
+ }
+ return b.every(x=>x!=="")?"draw":null;
+}
+
+function bestMove(){
+ let best=-100;
+ let choice=null;
+ for(let i=0;i<9;i++)if(!board[i]){
+  board[i]="O";
+  let score=minimax(board,false);
+  board[i]="";
+  if(score>best){best=score;choice=i;}
+ }
+ return choice;
+}
+
+function restart(){
+ board=Array(9).fill("");
+ turn="X";
+ active=!!mode;
+ cells.forEach(c=>c.innerText="");
+ document.getElementById("message").innerText="Good Luck!";
+ document.getElementById("status").innerText=
+ !mode?"Choose your game mode!":
+ mode==="computer"?"Your Turn (X)":"Player X's Turn";
+}
+</script>
+</body>
+</html>

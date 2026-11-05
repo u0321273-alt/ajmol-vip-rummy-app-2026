@@ -1,0 +1,209 @@
+11
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AJMOL VIP RUMMY</title>
+
+<link rel="manifest" href="/manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="theme-color" content="#D4AF37"><style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #30200b, #080808 65%);
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 390px;
+  background: #14110d;
+  border: 1px solid #bd8d32;
+  border-radius: 20px;
+  padding: 30px 23px;
+  box-shadow: 0 0 35px #b8863040;
+  text-align: center;
+}
+
+.logo {
+  font-size: 29px;
+  font-weight: 900;
+  color: #ffd36a;
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px #bd8d32;
+}
+
+.subtitle {
+  color: #c5a66b;
+  margin: 12px 0 30px;
+  font-size: 13px;
+}
+
+h2 {
+  font-size: 21px;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin: 9px 0;
+  border: 1px solid #765b2a;
+  background: #080808;
+  color: white;
+  border-radius: 10px;
+  outline: none;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 14px;
+  background: linear-gradient(90deg,#a66c13,#ffdc78);
+  border: none;
+  border-radius: 10px;
+  color: #160f05;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.note {
+  color: #888;
+  font-size: 11px;
+  margin-top: 22px;
+}
+
+.hidden {
+  display: none;
+}
+
+.switch {
+  color: #ffcf69;
+  margin-top: 18px;
+  font-size: 13px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+  <div class="logo">👑 AJMOL</div>
+  <div class="subtitle">VIP RUMMY</div>
+
+  <div id="phoneSection">
+    <h2>Welcome Back</h2>
+    <input
+      id="phone"
+      type="tel"
+      maxlength="10"
+      placeholder="Enter Mobile Number"
+    >
+
+    <button onclick="requestOtp()">GET OTP</button>
+
+    <div class="switch" onclick="showPassword()">
+      Login with Password
+    </div>
+  </div>
+
+  <div id="otpSection" class="hidden">
+    <h2>OTP Verification</h2>
+
+    <input
+      id="otp"
+      type="text"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="Enter OTP"
+    >
+
+    <button onclick="verifyOtp()">VERIFY OTP</button>
+
+    <div class="switch" onclick="showPhone()">
+      Back to Mobile Login
+    </div>
+  </div>
+
+  <div id="passwordSection" class="hidden">
+    <h2>Password Login</h2>
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Enter Password"
+    >
+
+    <button onclick="alert('Password login backend not connected yet.')">
+      LOGIN
+    </button>
+
+    <div class="switch" onclick="showPhone()">
+      Back to OTP Login
+    </div>
+  </div>
+
+  <div class="note">
+    Secure account access | AJMOL VIP RUMMY
+  </div>
+
+</div>
+
+<script>
+function showPhone() {
+  phoneSection.classList.remove("hidden");
+  otpSection.classList.add("hidden");
+  passwordSection.classList.add("hidden");
+}
+
+function showPassword() {
+  phoneSection.classList.add("hidden");
+  otpSection.classList.add("hidden");
+  passwordSection.classList.remove("hidden");
+}
+
+function requestOtp() {
+  const phone = document.getElementById("phone").value;
+
+  if (!/^[6-9]\d{9}$/.test(phone)) {
+    alert("Please enter a valid 10-digit Indian mobile number.");
+    return;
+  }
+
+  alert("OTP service is not connected yet.");
+}
+
+function verifyOtp() {
+  alert("OTP verification backend is not connected yet.");
+}
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .then(() => console.log("AJMOL VIP RUMMY ready"))
+      .catch(error => console.log(error));
+  });
+}
+</script></body>
+</html>

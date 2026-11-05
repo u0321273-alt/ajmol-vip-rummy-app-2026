@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AJMOL VIP RUMMY</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial}
+header{text-align:center;padding:25px 10px;color:#FFD36A;font-size:25px;font-weight:bold}
+.balance{margin:10px 15px;padding:17px;background:#171717;border:1px solid #D4AF37;border-radius:12px;text-align:center;color:#FFD36A;font-size:20px}
+h2{text-align:center;color:#FFD36A;margin-top:30px}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:15px}
+.game{background:#171717;border:1px solid #D4AF37;border-radius:14px;padding:22px 8px;text-align:center;text-decoration:none;color:#FFD36A}
+.emoji{font-size:42px;display:block;margin-bottom:12px}
+.game b{font-size:16px}
+.game small{display:block;color:#ccc;margin-top:8px}
+footer{text-align:center;color:#888;padding:25px}
+</style>
+</head>
+<body>
+<header>👑 AJMOL VIP RUMMY</header>
+<div class="balance">
+🪙 Virtual Coins: <span id="coins">1000</span>
+</div>
+<h2>🎮 CHOOSE YOUR GAME</h2>
+<div class="games">
+<a class="game" href="/game/"><span class="emoji">🎡</span><b>Lucky Spin</b><small>Spin & Win Coins</small></a>
+<a class="game" href="/scratch/"><span class="emoji">🎁</span><b>Scratch Card</b><small>Play Now</small></a>
+<a class="game" href="/lucky-number/"><span class="emoji">🔢</span><b>Lucky Number</b><small>Play Now</small></a>
+<a class="game" href="/tic-tac-toe/"><span class="emoji">⭕</span><b>Tic Tac Toe</b><small>Play Now</small></a>
+<a class="game" href="/memory-match/"><span class="emoji">🧠</span><b>Memory Match</b><small>Play Now</small></a>
+<a class="game" href="/number-puzzle/"><span class="emoji">🔷</span><b>Number Puzzle</b><small>Play Now</small></a>
+</div>
+<footer>© 2026 AJMOL VIP RUMMY</footer>
+<script>
+function updateCoins(){
+  let coins=Number(localStorage.getItem("ajmol_coins"));
+  if(!Number.isFinite(coins)||coins<=0) coins=1000;
+  document.getElementById("coins").innerText=coins;
+}
+updateCoins();
+window.addEventListener("pageshow",updateCoins);
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden) updateCoins();
+});
+window.addEventListener("focus",updateCoins);
+</script>
+<a href="/profile/" style="display:block;text-align:center;color:#FFD36A;padding:15px;font-weight:bold;">👤 MY PROFILE</a>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "AJMOL VIP RUMMY",
+  "short_name": "AJMOL RUMMY",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#D4AF37",
+  "description": "AJMOL VIP RUMMY Game",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png","purpose": "any",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png","purpose": "any",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AJMOL VIP RUMMY</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080808;color:white;
+ font-family:Arial,sans-serif;text-align:center;
+}
+header{padding:22px 5px;color:#FFD36A;font-size:24px;font-weight:bold}
+.balance{
+ margin:12px auto;padding:15px;width:85%;
+ background:#171717;border:1px solid #D4AF37;
+ border-radius:12px;color:#FFD36A;font-size:21px;
+}
+#limit{color:#FFD36A;font-size:16px;margin:12px auto;padding:10px}
+.pointer{color:#FFD36A;font-size:34px;height:35px}
+.wheel-wrap{position:relative;width:min(88vw,340px);margin:auto}
+.wheel{
+ width:100%;aspect-ratio:1;border:7px solid #D4AF37;
+ border-radius:50%;box-shadow:0 0 25px #D4AF37;
+ transition:transform 4s cubic-bezier(.15,.8,.2,1);
+}
+svg{width:100%;height:100%;display:block}
+.center{
+ position:absolute;top:50%;left:50%;
+ transform:translate(-50%,-50%);
+ width:85px;height:85px;border-radius:50%;
+ background:#080808;border:4px solid #D4AF37;
+ display:flex;align-items:center;justify-content:center;
+ color:#FFD36A;font-weight:bold;
+}
+button{
+ margin:20px;padding:16px 45px;border:0;
+ border-radius:30px;
+ background:linear-gradient(45deg,#D4AF37,#FFE08A);
+ color:#080808;font-size:19px;font-weight:bold;
+}
+button:disabled{opacity:.4}
+#result{color:#FFD36A;font-size:20px;min-height:35px}
+</style>
+</head>
+<body>
+
+<header>👑 AJMOL VIP RUMMY</header>
+
+<div class="balance">🪙 Coins: <span id="coins">1000</span></div>
+<div id="limit">Daily spins left: 3/3</div>
+<div class="pointer">▼</div>
+
+<div class="wheel-wrap">
+ <div class="wheel" id="wheel">
+  <svg id="wheelSvg" viewBox="0 0 300 300"></svg>
+ </div>
+ <div class="center">AJMOL</div>
+</div>
+
+<button id="spinButton" onclick="spin()">SPIN NOW</button>
+<div id="result">Good Luck!</div>
+
+<script>
+const rewards=[10,20,50,100,200,500,1000,"TRY AGAIN"];
+const svg=document.getElementById("wheelSvg");
+const colors=["#FFD36A","#171717"];
+const ns="http://www.w3.org/2000/svg";
+
+rewards.forEach((reward,i)=>{
+ const start=(-112.5+i*45)*Math.PI/180;
+ const end=(-112.5+(i+1)*45)*Math.PI/180;
+ const x1=150+140*Math.cos(start);
+ const y1=150+140*Math.sin(start);
+ const x2=150+140*Math.cos(end);
+ const y2=150+140*Math.sin(end);
+
+ const path=document.createElementNS(ns,"path");
+ path.setAttribute("d",`M150 150 L${x1} ${y1} A140 140 0 0 1 ${x2} ${y2} Z`);
+ path.setAttribute("fill",colors[i%2]);
+ path.setAttribute("stroke","#D4AF37");
+ path.setAttribute("stroke-width","2");
+ svg.appendChild(path);
+
+ const angle=(-90+i*45)*Math.PI/180;
+ const text=document.createElementNS(ns,"text");
+ text.setAttribute("x",150+88*Math.cos(angle));
+ text.setAttribute("y",150+88*Math.sin(angle));
+ text.setAttribute("fill",i%2===0?"#080808":"#FFD36A");
+ text.setAttribute("font-size",reward==="TRY AGAIN"?"10":"15");
+ text.setAttribute("font-weight","bold");
+ text.setAttribute("text-anchor","middle");
+ text.setAttribute("dominant-baseline","middle");
+ text.textContent=reward;
+ svg.appendChild(text);
+});
+let coins=Number(localStorage.getItem("ajmol_coins"));
+if(!Number.isFinite(coins) || coins<=0) coins=1000;
+localStorage.setItem("ajmol_coins",String(coins));
+document.getElementById("coins").innerText=coins;
+let rotation=0;let spinning=false;
+
+const LIMIT=3;
+const DAY=24*60*60*1000;
+const STORAGE_KEY="ajmol_spin_limit_v1";
+
+let saved={};
+try{
+ saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
+}catch(e){saved={};}
+
+let spinsUsed=Number(saved.spinsUsed)||0;
+let resetAt=Number(saved.resetAt)||0;
+
+function saveLimit(){
+ localStorage.setItem(STORAGE_KEY,JSON.stringify({
+  spinsUsed:spinsUsed,
+  resetAt:resetAt
+ }));
+}
+
+function updateLimit(){
+ const now=Date.now();
+
+ if(resetAt && now>=resetAt){
+  spinsUsed=0;
+  resetAt=0;
+  saveLimit();
+ }
+
+ const button=document.getElementById("spinButton");
+ const limit=document.getElementById("limit");
+
+ if(resetAt>now){
+  const left=resetAt-now;
+  const hours=Math.floor(left/3600000);
+  const minutes=Math.floor((left%3600000)/60000);
+  const seconds=Math.floor((left%60000)/1000);
+
+  limit.innerText="24-hour limit! Try again in "+
+   String(hours).padStart(2,"0")+":"+
+   String(minutes).padStart(2,"0")+":"+
+   String(seconds).padStart(2,"0");
+
+  button.disabled=true;
+ }else{
+  limit.innerText="Daily spins left: "+(LIMIT-spinsUsed)+"/"+LIMIT;
+  button.disabled=spinning || spinsUsed>=LIMIT;
+ }
+}
+
+function spin(){
+ if(spinning || Date.now()<resetAt || spinsUsed>=LIMIT){
+  updateLimit();
+  return;
+ }
+
+ spinning=true;
+ spinsUsed++;
+
+ if(spinsUsed>=LIMIT){
+  resetAt=Date.now()+DAY;
+ }
+
+ saveLimit();
+ updateLimit();
+
+ document.getElementById("result").innerText="Spinning...";
+
+ const index=Math.floor(Math.random()*rewards.length);
+ const target=(360-index*45)%360;
+ const current=rotation%360;
+ const extra=(target-current+360)%360;
+
+ rotation+=1800+extra;
+ document.getElementById("wheel").style.transform=
+  "rotate("+rotation+"deg)";
+
+ setTimeout(()=>{
+  const reward=rewards[index];
+
+  if(reward!=="TRY AGAIN"){
+   coins+=reward;
+   localStorage.setItem("ajmol_coins",String(coins));
+   let history=JSON.parse(localStorage.getItem("ajmol_game_history")||"[]");
+   history.unshift({game:"Lucky Spin",coins:reward,date:new Date().toLocaleString()});
+   localStorage.setItem("ajmol_game_history",JSON.stringify(history.slice(0,50)));
+   document.getElementById("coins").innerText=coins;
+   document.getElementById("result").innerText=
+    "Congratulations! You won "+reward+" coins!";
+  }else{
+   document.getElementById("result").innerText=
+    "Better luck next time!";
+  }
+
+  spinning=false;
+  updateLimit();
+ },4100);
+}
+
+updateLimit();
+setInterval(updateLimit,1000);
+</script>
+</body>
+</html>

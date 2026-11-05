@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AJMOL VIP RUMMY - Profile</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#080808;color:white;font-family:Arial;text-align:center}
+h1{color:#FFD36A}
+.card{max-width:400px;margin:20px auto;background:#171717;border:1px solid #D4AF37;border-radius:18px;padding:22px}
+.avatar{width:90px;height:90px;border-radius:50%;border:3px solid #D4AF37;background:#292010;margin:auto;display:flex;align-items:center;justify-content:center;font-size:45px}
+h2{color:#FFD36A}
+.coins{color:#FFD36A;font-size:25px;font-weight:bold;margin:15px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.stat{background:#242424;border-radius:12px;padding:15px;border:1px solid #8c7027}
+.stat b{display:block;color:#FFD36A;font-size:22px;margin-top:8px}
+button{background:#171717;color:#FFD36A;border:1px solid #D4AF37;padding:13px 20px;border-radius:10px;font-size:16px;margin:7px}
+input{background:#080808;color:white;border:1px solid #D4AF37;padding:12px;border-radius:8px;width:90%;margin:10px}
+a{color:#FFD36A}
+</style>
+</head>
+<body>
+
+<h1>👑 AJMOL VIP RUMMY</h1>
+
+<div class="card">
+ <div class="avatar">👤</div>
+ <h2 id="username">AJMOL VIP</h2>
+ <div class="coins">🪙 <span id="coins">1000</span> Coins</div>
+
+ <div class="stats">
+  <div class="stat">🎮 Games Played<b id="played">0</b></div>
+  <div class="stat">🏆 Games Won<b id="won">0</b></div>
+ </div>
+</div>
+
+<div class="card">
+ <h2>✏️ Edit Profile</h2>
+ <input id="nameInput" placeholder="Enter Your Username">
+ <br>
+ <button onclick="saveProfile()">Save Profile</button>
+</div>
+
+<div class="card">
+ <h2>📜 Game History</h2>
+ <div id="history">No Game History Yet</div>
+</div>
+
+<button onclick="logout()">🚪 Logout</button>
+<br><br>
+<a href="/home/">← Back to Home</a>
+
+<script>
+function showHistory(){
+ let history=JSON.parse(localStorage.getItem("ajmol_game_history")||"[]");
+ let box=document.getElementById("history");
+ if(history.length===0){box.innerHTML="No Game History Yet";return;}
+ box.innerHTML=history.map(item=>"<p>🎮 "+item.game+" — 🪙 "+item.coins+" coins — "+item.date+"</p>").join("");
+}
+function updateProfile(){
+ let coins=Number(localStorage.getItem("ajmol_coins"));
+ if(!Number.isFinite(coins)||coins<=0)coins=1000;
+ document.getElementById("coins").innerText=coins;
+
+ let name=localStorage.getItem("ajmol_username")||"AJMOL VIP";
+ document.getElementById("username").innerText=name;
+ document.getElementById("nameInput").value=name;
+
+ document.getElementById("played").innerText=
+ localStorage.getItem("ajmol_games_played")||"0";
+
+ document.getElementById("won").innerText=
+ localStorage.getItem("ajmol_games_won")||"0";
+}
+function saveProfile(){
+ let name=document.getElementById("nameInput").value.trim();
+ if(!name){alert("Please enter username");return;}
+ localStorage.setItem("ajmol_username",name);
+ updateProfile();showHistory();
+ alert("Profile Updated!");
+}
+function logout(){
+ if(confirm("Are you sure you want to logout?")){
+  window.location.href="/";
+ }
+}
+updateProfile();showHistory();
+</script>
+
+</body>
+</html>

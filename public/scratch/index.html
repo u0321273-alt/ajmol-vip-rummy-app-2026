@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AJMOL VIP RUMMY - Scratch Card</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial;text-align:center;padding:20px}
+h1{color:#FFD36A;font-size:25px}
+.balance{background:#171717;border:1px solid #D4AF37;border-radius:12px;padding:15px;color:#FFD36A;font-size:20px;margin:20px 0}
+.card{width:300px;height:190px;max-width:100%;margin:30px auto;position:relative;border:2px solid #D4AF37;border-radius:16px;overflow:hidden;background:#171717}
+#reward{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#FFD36A;font-size:27px;font-weight:bold}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+button{background:#D4AF37;color:#080808;border:0;border-radius:10px;padding:14px 25px;font-weight:bold;font-size:17px;margin:10px}
+#message{color:#FFD36A;min-height:30px}
+a{color:#FFD36A}
+</style>
+</head>
+<body>
+<h1>🎁 AJMOL VIP RUMMY</h1>
+<h2>SCRATCH & WIN</h2>
+<div class="balance">🪙 Coins: <span id="coins">1000</span></div>
+<p id="limit">Loading...</p>
+<p>Scratch the golden card with your finger!</p>
+<div class="card">
+<div id="reward">
+<span>🎉 YOUR REWARD</span>
+<span id="amount">?</span>
+</div>
+<canvas id="cover"></canvas>
+</div>
+<p id="message">Scratch the card to reveal your reward.</p>
+<button id="again" disabled>Scratch Used</button>
+<p><a href="/home/">← Back to Home</a></p>
+
+<script>
+const KEY="ajmol_coins";
+const LIMIT_KEY="ajmol_scratch_limit_v1";
+const MAX=3;
+const DAY=24*60*60*1000;
+
+let coins=Number(localStorage.getItem(KEY));
+if(!Number.isFinite(coins)||coins<=0)coins=1000;
+localStorage.setItem(KEY,String(coins));
+
+let saved={};
+try{saved=JSON.parse(localStorage.getItem(LIMIT_KEY)||"{}")}catch(e){}
+let used=Number(saved.used)||0;
+let resetAt=Number(saved.resetAt)||0;
+
+if(resetAt && Date.now()>=resetAt){
+ used=0;
+ resetAt=0;
+ localStorage.removeItem(LIMIT_KEY);
+}
+
+const canvas=document.getElementById("cover");
+const ctx=canvas.getContext("2d");
+let drawing=false;
+let revealed=false;
+let started=false;
+let reward=0;
+
+function updateCoins(){
+ document.getElementById("coins").innerText=coins;
+}
+function updateLimit(){
+ if(used>=MAX && resetAt>Date.now()){
+  document.getElementById("limit").innerText=
+   "⛔ Scratch limit finished. Try again after 24 hours.";
+  document.getElementById("message").innerText=
+   "Your 3 scratches are used.";
+  canvas.style.display="none";
+  return false;
+ }
+ document.getElementById("limit").innerText=
+  "🎟️ Scratches left: "+(MAX-used)+" / "+MAX;
+ return true;
+}
+function saveLimit(){
+ localStorage.setItem(LIMIT_KEY,JSON.stringify({used,resetAt}));
+}
+function setup(){
+ const rect=canvas.getBoundingClientRect();
+ const dpr=window.devicePixelRatio||1;
+ canvas.width=rect.width*dpr;
+ canvas.height=rect.height*dpr;
+ ctx.scale(dpr,dpr);
+ ctx.fillStyle="#C99B25";
+ ctx.fillRect(0,0,rect.width,rect.height);
+ ctx.fillStyle="#171717";
+ ctx.font="bold 23px Arial";
+ ctx.textAlign="center";
+ ctx.fillText("SCRATCH HERE",rect.width/2,rect.height/2);
+ ctx.globalCompositeOperation="destination-out";
+}
+function position(e){
+ const r=canvas.getBoundingClientRect();
+ return{x:e.clientX-r.left,y:e.clientY-r.top};
+}
+function start(e){
+ if(revealed||!updateLimit())return;
+ if(!started){
+  started=true;
+  used++;
+  if(used>=MAX)resetAt=Date.now()+DAY;
+  saveLimit();
+  updateLimit();
+ }
+ drawing=true;
+ canvas.setPointerCapture(e.pointerId);
+ scratch(e);
+}
+function scratch(e){
+ if(!drawing||revealed)return;
+ const p=position(e);
+ ctx.beginPath();
+ ctx.arc(p.x,p.y,19,0,Math.PI*2);
+ ctx.fill();
+ check();
+}
+function stop(){drawing=false}
+function check(){
+ const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+ let clear=0;
+ for(let i=3;i<pixels.length;i+=4){
+  if(pixels[i]<80)clear++;
+ }
+ if(clear/pixels.length>0.42)reveal();
+}
+function reveal(){
+ if(revealed)return;
+ revealed=true;
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ coins+=reward;
+ localStorage.setItem(KEY,String(coins));
+ updateCoins();
+ document.getElementById("amount").innerText="+"+reward+" COINS";
+ document.getElementById("message").innerText=
+  "Congratulations! "+reward+" coins added!";
+ document.getElementById("again").disabled=true;
+}
+canvas.addEventListener("pointerdown",start);
+canvas.addEventListener("pointermove",scratch);
+canvas.addEventListener("pointerup",stop);
+canvas.addEventListener("pointercancel",stop);
+
+reward=[10,20,50,100,200][Math.floor(Math.random()*5)];
+document.getElementById("amount").innerText="+"+reward+" COINS";
+updateCoins();
+if(updateLimit())setup();
+</script>
+</body>
+</html>

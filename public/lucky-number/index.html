@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AJMOL VIP RUMMY - Lucky Number</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial;text-align:center;padding:20px}
+h1{color:#FFD36A}
+.balance{padding:15px;background:#171717;border:1px solid #D4AF37;border-radius:12px;color:#FFD36A;font-size:20px;margin:20px 0}
+#limit{color:#FFD36A}
+.numbers{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:350px;margin:25px auto}
+.numbers button{padding:18px 5px;font-size:22px;font-weight:bold;background:#171717;color:#FFD36A;border:1px solid #D4AF37;border-radius:12px}
+.numbers button:disabled{opacity:.35}
+#message{min-height:55px;color:#FFD36A;font-size:18px}
+a{color:#FFD36A}
+</style>
+</head>
+<body>
+<h1>🔢 AJMOL VIP RUMMY</h1>
+<h2>LUCKY NUMBER</h2>
+<div class="balance">🪙 Coins: <span id="coins">1000</span></div>
+<p id="limit">Loading...</p>
+<p>Choose your lucky number from 1 to 10!</p>
+<p>🎁 Correct guess = 50 Coins</p>
+<div class="numbers" id="numbers"></div>
+<p id="message">Good luck!</p>
+<p><a href="/home/">← Back to Home</a></p>
+
+<script>
+const COIN_KEY="ajmol_coins";
+const LIMIT_KEY="ajmol_lucky_number_limit_v1";
+const MAX=10;
+const DAY=24*60*60*1000;
+let coins=Number(localStorage.getItem(COIN_KEY));
+if(!Number.isFinite(coins)||coins<=0)coins=1000;
+localStorage.setItem(COIN_KEY,String(coins));
+
+let saved={};
+try{saved=JSON.parse(localStorage.getItem(LIMIT_KEY)||"{}")}catch(e){}
+let used=Number(saved.used)||0;
+let resetAt=Number(saved.resetAt)||0;
+
+if(resetAt && Date.now()>=resetAt){
+ used=0;
+ resetAt=0;
+ localStorage.removeItem(LIMIT_KEY);
+}
+
+const secret=Math.floor(Math.random()*10)+1;
+let played=false;
+
+function updateCoins(){
+ document.getElementById("coins").innerText=coins;
+}
+function updateLimit(){
+ if(used>=MAX && resetAt>Date.now()){
+  document.getElementById("limit").innerText="⛔ Daily limit finished. Come back after 24 hours.";
+  return false;
+ }
+ document.getElementById("limit").innerText="🎯 Attempts left: "+(MAX-used)+" / "+MAX;
+ return true;
+}
+function saveLimit(){
+ localStorage.setItem(LIMIT_KEY,JSON.stringify({used,resetAt}));
+}
+function guess(n,button){
+ if(played||!updateLimit())return;
+ played=true;
+ used++;
+ if(used>=MAX)resetAt=Date.now()+DAY;
+ saveLimit();
+
+ document.querySelectorAll(".numbers button").forEach(b=>b.disabled=true);
+
+ if(n===secret){
+  coins+=50;
+  localStorage.setItem(COIN_KEY,String(coins));
+  updateCoins();
+  document.getElementById("message").innerText="🎉 Correct! You won 50 coins!";
+ }else{
+  document.getElementById("message").innerText="❌ Wrong number! Lucky number was "+secret;
+ }
+ updateLimit();
+}
+for(let i=1;i<=10;i++){
+ const b=document.createElement("button");
+ b.innerText=i;
+ b.onclick=()=>guess(i,b);
+ document.getElementById("numbers").appendChild(b);
+}
+updateCoins();
+if(!updateLimit()){
+ document.querySelectorAll(".numbers button").forEach(b=>b.disabled=true);
+}
+</script>
+</body>
+</html>

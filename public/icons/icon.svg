@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="90" fill="#080808"/>
+  <rect x="15" y="15" width="482" height="482" rx="80" fill="none" stroke="#D4AF37" stroke-width="12"/>
+  <path d="M145 190 L105 95 L195 155 L256 65 L317 155 L407 95 L367 190 Z" fill="#FFD36A" stroke="#D4AF37" stroke-width="8"/>
+  <rect x="145" y="185" width="222" height="35" rx="8" fill="#D4AF37"/>
+  <circle cx="105" cy="95" r="12" fill="#FFFFFF"/>
+  <circle cx="256" cy="65" r="12" fill="#FFFFFF"/>
+  <circle cx="407" cy="95" r="12" fill="#FFFFFF"/>
+  <text x="256" y="305" font-size="76" font-weight="bold" text-anchor="middle" fill="#FFD36A">AJMOL</text>
+  <text x="256" y="375" font-size="55" font-weight="bold" text-anchor="middle" fill="#FFFFFF">RUMMY</text>
+  <text x="256" y="430" font-size="30" font-weight="bold" text-anchor="middle" fill="#D4AF37">VIP</text>
+</svg>

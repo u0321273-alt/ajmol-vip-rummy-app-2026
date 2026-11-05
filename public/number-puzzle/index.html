@@ -1,0 +1,113 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AJMOL VIP RUMMY - Number Puzzle</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:18px;background:#080808;color:white;font-family:Arial;text-align:center}
+h1{color:#FFD36A}
+h2{color:#D4AF37}
+.info{display:flex;justify-content:center;gap:12px;margin:20px}
+.info div{background:#171717;border:1px solid #D4AF37;padding:12px;border-radius:10px;color:#FFD36A}
+#board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:330px;margin:25px auto}
+.tile{height:95px;background:#171717;color:#FFD36A;border:2px solid #D4AF37;border-radius:13px;font-size:32px;font-weight:bold}
+.empty{background:#080808;border:2px dashed #444}
+button{cursor:pointer}
+.controls button{background:#171717;color:#FFD36A;border:1px solid #D4AF37;padding:13px 20px;border-radius:10px;font-size:16px;margin:5px}
+#message{color:#FFD36A;font-size:19px;min-height:35px}
+a{color:#FFD36A}
+</style>
+</head>
+<body>
+
+<h1>👑 AJMOL VIP RUMMY</h1>
+<h2>🔷 NUMBER PUZZLE</h2>
+
+<div class="info">
+<div>Moves: <span id="moves">0</span></div>
+<div>🏆 Reward: 100 Coins</div>
+</div>
+
+<p>Numbers ko sahi order mein lagao!</p>
+<p>1 → 2 → 3<br>4 → 5 → 6<br>7 → 8 → Empty</p>
+
+<div id="board"></div>
+
+<p id="message">Good Luck! 🧩</p>
+
+<div class="controls">
+<button onclick="newGame()">🔄 New Game</button>
+</div>
+
+<br>
+<a href="/home/">← Back to Home</a>
+
+<script>
+let tiles=[];
+let moves=0;
+let finished=false;
+const board=document.getElementById("board");
+
+function draw(){
+ board.innerHTML="";
+ tiles.forEach((n,i)=>{
+  let b=document.createElement("button");
+  b.className="tile"+(n===0?" empty":"");
+  b.innerText=n===0?"":n;
+  b.onclick=()=>move(i);
+  board.appendChild(b);
+ });
+ document.getElementById("moves").innerText=moves;
+}
+
+function move(i){
+ if(finished||tiles[i]===0)return;
+
+ let empty=tiles.indexOf(0);
+ let row=Math.floor(i/3),col=i%3;
+ let er=Math.floor(empty/3),ec=empty%3;
+
+ if(Math.abs(row-er)+Math.abs(col-ec)!==1)return;
+
+ [tiles[i],tiles[empty]]=[tiles[empty],tiles[i]];
+ moves++;
+ draw();
+
+ if(tiles.join(",")==="1,2,3,4,5,6,7,8,0"){
+  finished=true;
+  let coins=Number(localStorage.getItem("ajmol_coins"));
+  if(!Number.isFinite(coins)||coins<=0)coins=1000;
+  coins+=100;
+  localStorage.setItem("ajmol_coins",String(coins));
+  document.getElementById("message").innerText=
+   "🎉 Puzzle Complete! You won 100 Coins!";
+ }
+}
+
+function newGame(){
+ tiles=[1,2,3,4,5,6,7,8,0];
+ for(let i=0;i<150;i++){
+  let empty=tiles.indexOf(0);
+  let row=Math.floor(empty/3),col=empty%3;
+  let options=[];
+  for(let j=0;j<9;j++){
+   let r=Math.floor(j/3),c=j%3;
+   if(Math.abs(r-row)+Math.abs(c-col)===1)options.push(j);
+  }
+  let choice=options[Math.floor(Math.random()*options.length)];
+  [tiles[empty],tiles[choice]]=[tiles[choice],tiles[empty]];
+ }
+ moves=0;
+ finished=false;
+ document.getElementById("message").innerText="Good Luck! 🧩";
+ draw();
+}
+
+newGame();
+</script>
+</body>
+</html>
