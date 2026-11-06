@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.netlify.ajmol_vip_rummy.twa",
+      "sha256_cert_fingerprints": [
+        "D9:DE:1E:8A:2D:7B:AE:7A:AC:AF:C4:5C:07:90:20:AD:4F:C0:BF:0E:4E:84:53:46:68:30:78:65:DB:FE:00:EB"
+      ]
+    }
+  }
+]
