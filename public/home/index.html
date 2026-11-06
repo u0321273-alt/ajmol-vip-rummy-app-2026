@@ -105,6 +105,78 @@ nav a{
  text-align:center;font-size:12px;font-weight:bold;
 }
 nav span{display:block;font-size:22px;margin-bottom:3px}
+
+/* AJMOL VIP RUMMY CINEMATIC ANIMATION */
+header,.hero,.bonus,.game{
+ animation: royalEntrance .8s ease both;
+}
+@keyframes royalEntrance{
+ from{opacity:0;transform:translateY(22px) scale(.96);filter:blur(5px)}
+ to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+.game{
+ position:relative;overflow:hidden;
+ transition:transform .25s,box-shadow .25s;
+}
+.game:before{
+ content:"";position:absolute;inset:-100%;
+ background:linear-gradient(110deg,transparent 42%,#fff8 50%,transparent 58%);
+ transform:translateX(-100%) rotate(15deg);
+ transition:transform .7s;pointer-events:none;
+}
+.game:active{
+ transform:scale(.93);
+ box-shadow:0 0 25px #ffd34d,0 0 50px #a52bff;
+}
+.game:active:before{transform:translateX(100%) rotate(15deg)}
+#vip-launch{
+ position:fixed;inset:0;z-index:9999;display:none;
+ align-items:center;justify-content:center;overflow:hidden;
+ background:radial-gradient(circle,#6825a6 0%,#21083e 55%,#090315 100%);
+}
+#vip-launch.show{display:flex;animation:screenIn .35s ease}
+@keyframes screenIn{from{opacity:0}to{opacity:1}}
+.vip-rays{
+ position:absolute;width:150vmax;height:150vmax;
+ background:repeating-conic-gradient(from 0deg,#ffda6418 0deg 5deg,transparent 5deg 15deg);
+ animation:raysTurn 18s linear infinite;
+}
+@keyframes raysTurn{to{transform:rotate(360deg)}}
+.vip-ring{
+ position:absolute;width:250px;height:250px;border:3px solid #ffd85c;
+ border-radius:50%;box-shadow:0 0 25px #ffcf39, inset 0 0 25px #ffcf39;
+ animation:ringPulse 1s ease-in-out infinite alternate;
+}
+@keyframes ringPulse{to{transform:scale(1.5);opacity:.15}}
+.vip-core{
+ position:relative;text-align:center;padding:30px 20px;width:90%;
+ max-width:390px;z-index:2;
+ animation:corePop .65s cubic-bezier(.2,1.5,.4,1);
+}
+@keyframes corePop{
+ from{transform:scale(.35) rotate(-12deg);opacity:0}
+ to{transform:scale(1) rotate(0);opacity:1}
+}
+.vip-crown{font-size:64px;filter:drop-shadow(0 0 18px #ffdc55);animation:crownFloat 1.3s ease-in-out infinite alternate}
+@keyframes crownFloat{to{transform:translateY(-12px) rotate(5deg)}}
+.vip-title{
+ font-size:clamp(27px,8vw,40px);font-weight:1000;line-height:1.1;
+ color:#ffe17b;text-shadow:0 0 8px #ffb52b,0 0 25px #ffb52b,3px 4px #350b51;
+}
+.vip-sub{color:#fff;font-weight:bold;letter-spacing:4px;margin:12px 0 25px}
+.vip-track{height:13px;border:2px solid #ffe17b;border-radius:20px;background:#160727;overflow:hidden;box-shadow:0 0 18px #ffcb39}
+.vip-progress{height:100%;width:0;background:linear-gradient(90deg,#ff8c00,#fff3a0,#ffba24);box-shadow:0 0 15px #fff;transition:width 1.5s linear}
+.vip-loading{color:#ffe8a2;font-size:13px;font-weight:bold;margin-top:13px;letter-spacing:2px}
+.vip-coin{
+ position:absolute;top:-50px;font-size:27px;
+ animation:coinFall 1.8s linear forwards;
+ filter:drop-shadow(0 0 9px #ffca36);
+}
+@keyframes coinFall{to{transform:translateY(115vh) rotate(600deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){
+ .vip-rays,.vip-crown,.vip-ring,.vip-coin{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -173,6 +245,18 @@ nav span{display:block;font-size:22px;margin-bottom:3px}
  <a href="/profile/"><span>👤</span>Profile</a>
 </nav>
 
+
+<div id="vip-launch" aria-hidden="true">
+ <div class="vip-rays"></div><div class="vip-ring"></div>
+ <div class="vip-core">
+  <div class="vip-crown">👑</div>
+  <div class="vip-title">AJMOL VIP<br>RUMMY</div>
+  <div class="vip-sub">★ PREMIUM GAMING ★</div>
+  <div class="vip-track"><div class="vip-progress"></div></div>
+  <div class="vip-loading">PREPARING YOUR GAME...</div>
+ </div>
+</div>
+
 <script>
 function claimBonus(){
  let last=Number(localStorage.getItem("ajmol_daily_bonus_time")||0);
@@ -195,6 +279,32 @@ function updateCoins(){
  document.getElementById("coins").innerText=coins;
 }
 updateCoins();
+
+// Cinematic launch effect for every game card
+document.querySelectorAll("a.game").forEach(link=>{
+ link.addEventListener("click",function(event){
+  if(event.ctrlKey || event.metaKey || event.button!==0)return;
+  event.preventDefault();
+  const destination=this.href;
+  const overlay=document.getElementById("vip-launch");
+  const bar=overlay.querySelector(".vip-progress");
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+  bar.style.width="0";
+  for(let i=0;i<14;i++){
+   const coin=document.createElement("span");
+   coin.className="vip-coin";
+   coin.textContent=i%2?"✨":"🪙";
+   coin.style.left=Math.random()*100+"%";
+   coin.style.animationDelay=(Math.random()*.7)+"s";
+   overlay.appendChild(coin);
+   setTimeout(()=>coin.remove(),2600);
+  }
+  requestAnimationFrame(()=>bar.style.width="100%");
+  setTimeout(()=>{window.location.href=destination;},1800);
+ });
+});
+
 window.addEventListener("pageshow",updateCoins);
 document.addEventListener("visibilitychange",()=>{
  if(!document.hidden)updateCoins();
