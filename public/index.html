@@ -112,40 +112,14 @@ button:active {
 
   <div id="phoneSection">
     <h2>Welcome Back</h2>
+
     <input
       id="phone"
       type="tel"
       maxlength="10"
+      inputmode="numeric"
       placeholder="Enter Mobile Number"
     >
-
-    <button onclick="requestOtp()">GET OTP</button>
-
-    <div class="switch" onclick="showPassword()">
-      Login with Password
-    </div>
-  </div>
-
-  <div id="otpSection" class="hidden">
-    <h2>OTP Verification</h2>
-
-    <input
-      id="otp"
-      type="text"
-      inputmode="numeric"
-      maxlength="6"
-      placeholder="Enter OTP"
-    >
-
-    <button onclick="verifyOtp()">VERIFY OTP</button>
-
-    <div class="switch" onclick="showPhone()">
-      Back to Mobile Login
-    </div>
-  </div>
-
-  <div id="passwordSection" class="hidden">
-    <h2>Password Login</h2>
 
     <input
       id="password"
@@ -153,13 +127,9 @@ button:active {
       placeholder="Enter Password"
     >
 
-    <button onclick="alert('Password login backend not connected yet.')">
-      LOGIN
-    </button>
+    <button onclick="demoLogin()">LOGIN</button>
 
-    <div class="switch" onclick="showPhone()">
-      Back to OTP Login
-    </div>
+    <div class="note">Demo Login | No OTP Required</div>
   </div>
 
   <div class="note">
@@ -169,32 +139,25 @@ button:active {
 </div>
 
 <script>
-function showPhone() {
-  phoneSection.classList.remove("hidden");
-  otpSection.classList.add("hidden");
-  passwordSection.classList.add("hidden");
-}
+function demoLogin() {
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value;
 
-function showPassword() {
-  phoneSection.classList.add("hidden");
-  otpSection.classList.add("hidden");
-  passwordSection.classList.remove("hidden");
-}
-
-function requestOtp() {
-  const phone = document.getElementById("phone").value;
-
-  if (!/^[6-9]\d{9}$/.test(phone)) {
-    alert("Please enter a valid 10-digit Indian mobile number.");
+  if (!/^[6-9][0-9]{9}$/.test(phone)) {
+    alert("Please enter a valid 10-digit mobile number.");
     return;
   }
 
-  alert("OTP service is not connected yet.");
+  if (!password.trim()) {
+    alert("Please enter a password.");
+    return;
+  }
+
+  localStorage.setItem("ajmol_demo_phone", phone);
+  localStorage.setItem("ajmol_demo_logged_in", "true");
+  window.location.href = "/home/";
 }
 
-function verifyOtp() {
-  alert("OTP verification backend is not connected yet.");
-}
 </script>
 
 <script>
