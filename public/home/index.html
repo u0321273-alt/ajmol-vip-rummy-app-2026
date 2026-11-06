@@ -3,114 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#160b30">
 <title>AJMOL VIP RUMMY</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:#003b12;color:white;
+ margin:0;padding:0 0 85px;color:#fff;
  font-family:Arial,sans-serif;
- padding-bottom:85px;
+ background:radial-gradient(circle at top,#49216e,#160b30 65%);
 }
 header{
- background:linear-gradient(135deg,#001d09,#087522,#002609);
- padding:18px 12px;text-align:center;
- border-bottom:2px solid #e8c43b;
+ padding:22px 16px 20px;
+ text-align:center;
+ background:linear-gradient(135deg,#210b42,#552080,#17092e);
+ border-bottom:2px solid #f5cb58;
+ box-shadow:0 5px 20px #0008;
 }
-.logo{font-size:27px;font-weight:900;color:#ffdc50;text-shadow:0 2px 8px #a66b00}
-.top{display:flex;justify-content:space-between;align-items:center;margin-top:15px}
-.user{color:#ffe58a;font-weight:bold;text-decoration:none}
+.logo{
+ font-size:25px;font-weight:900;color:#ffdc70;
+ text-shadow:0 0 15px #e9a52d;
+}
+.tagline{font-size:11px;color:#e8c8ff;letter-spacing:3px;margin-top:7px}
+.top{
+ display:flex;justify-content:space-between;
+ align-items:center;margin-top:20px;gap:10px;
+}
+.user{
+ color:#ffe5a0;text-decoration:none;
+ font-weight:bold;font-size:14px;
+}
 .balance{
- background:linear-gradient(135deg,#073c15,#006b20);
- border:2px solid #e9c83d;border-radius:30px;
- padding:10px 17px;color:#ffe45a;font-weight:bold;
+ background:linear-gradient(135deg,#ffe991,#d99420);
+ color:#381b05;padding:11px 15px;
+ border:2px solid #fff0a5;border-radius:25px;
+ font-weight:900;box-shadow:0 3px 12px #0007;
+}
+.hero{
+ margin:16px 13px;padding:22px 16px;
+ border:1px solid #f5ce6a;border-radius:18px;
+ background:linear-gradient(130deg,#65339a,#29104b 65%,#a45a27);
+ box-shadow:0 7px 20px #0007;
+}
+.hero small{color:#ffe5a0;letter-spacing:2px;font-weight:bold}
+.hero h1{font-size:25px;margin:10px 0;color:#ffdf80}
+.hero p{font-size:13px;color:#f2e5ff;line-height:1.5}
+.hero button{
+ border:0;border-radius:25px;padding:12px 22px;
+ background:linear-gradient(#fff0a1,#e5a52b);
+ color:#321800;font-weight:900;font-size:14px;
 }
 .bonus{
- margin:15px;padding:16px;border:2px solid #f5d34b;
- border-radius:14px;background:linear-gradient(110deg,#ffe75b,#d88a00);
- color:#142500;display:flex;justify-content:space-between;
- align-items:center;font-weight:bold;
+ margin:15px;padding:16px;
+ border:2px solid #ffdf77;border-radius:15px;
+ background:linear-gradient(110deg,#ffe98b,#d68a1d);
+ color:#321800;display:flex;
+ justify-content:space-between;align-items:center;
+ font-weight:900;cursor:pointer;
+ box-shadow:0 5px 15px #0006;
 }
-.bonus small{display:block;margin-top:5px}
-h2{text-align:center;color:#ffe36a;margin:22px 0 12px}
-.games{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
+.bonus small{display:block;margin-top:5px;font-weight:normal}
+h2{
+ text-align:center;color:#ffdf80;
+ font-size:20px;margin:25px 0 6px;
+}
+.sub{text-align:center;color:#d9c1ed;font-size:12px;margin-bottom:14px}
+.games{
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:12px;padding:12px;
+}
 .game{
  display:block;text-decoration:none;text-align:center;
- background:linear-gradient(145deg,#08752a,#003c13);
- border:2px solid #e9c83d;border-radius:15px;
- padding:14px 7px;color:white;
- box-shadow:0 4px 9px #001c08;
+ padding:17px 7px;border-radius:17px;color:white;
+ background:linear-gradient(145deg,#572780,#241044);
+ border:1px solid #eac35d;
+ box-shadow:0 5px 12px #0007;
+ transition:transform .15s;
 }
-.emoji{font-size:48px;display:block;margin-bottom:10px}
-.game b{font-size:16px;display:block;color:#fff2a5}
+.game:active{transform:scale(.96)}
+.emoji{font-size:43px;display:block;margin-bottom:10px}
+.game b{font-size:15px;color:#ffe9a4;display:block}
 .game small{
- display:inline-block;margin-top:10px;padding:8px 17px;
- border-radius:20px;background:linear-gradient(#ffe95a,#e7a500);
- color:#182500;font-weight:bold;font-size:13px;
+ display:inline-block;margin-top:12px;padding:8px 17px;
+ border-radius:20px;background:linear-gradient(#ffe98b,#d99b26);
+ color:#321800;font-weight:bold;font-size:12px;
 }
 .profile{
- display:block;margin:15px;padding:14px;text-align:center;
- background:linear-gradient(#ffe45c,#d99b00);
- border-radius:12px;color:#142500;
- text-decoration:none;font-weight:bold;font-size:17px;
+ display:block;margin:16px;padding:16px;text-align:center;
+ background:linear-gradient(110deg,#ffe98b,#d99b26);
+ border:2px solid #fff0b0;border-radius:14px;
+ color:#351b05;text-decoration:none;font-weight:900;
 }
-footer{text-align:center;color:#b8d7b8;padding:20px}
+footer{text-align:center;color:#c7acd9;padding:20px;font-size:12px}
 nav{
  position:fixed;bottom:0;left:0;width:100%;
  display:flex;justify-content:space-around;
- background:#00250c;border-top:2px solid #e9c83d;
- padding:12px 3px;
+ background:#190b2d;border-top:2px solid #eac35d;
+ padding:9px 3px;z-index:5;
 }
-nav a{color:#ffe36a;text-decoration:none;text-align:center;font-size:13px;font-weight:bold}
-nav span{display:block;font-size:23px;margin-bottom:4px}
+nav a{
+ color:#ffe18a;text-decoration:none;
+ text-align:center;font-size:12px;font-weight:bold;
+}
+nav span{display:block;font-size:22px;margin-bottom:3px}
 </style>
 </head>
 <body>
 
 <header>
  <div class="logo">👑 AJMOL VIP RUMMY</div>
+ <div class="tagline">★ PREMIUM GAMING CLUB ★</div>
  <div class="top">
   <a class="user" href="/profile/">👤 My Profile</a>
   <div class="balance">🪙 <span id="coins">1000</span></div>
  </div>
 </header>
 
-<div class="bonus" onclick="claimBonus()" style="cursor:pointer">
- <div>🎁 DAILY BONUS<small>Tap here to collect 100 coins!</small></div>
+<section class="hero">
+ <small>WELCOME TO VIP CLUB</small>
+ <h1>PLAY • ENJOY • HAVE FUN</h1>
+ <p>Welcome to AJMOL VIP RUMMY. Enjoy exciting games and collect virtual coins every day!</p>
+ <button onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">🎮 EXPLORE GAMES</button>
+</section>
+
+<div class="bonus" onclick="claimBonus()">
+ <div>🎁 DAILY BONUS<small>Tap here to collect 100 free coins!</small></div>
  <div style="font-size:30px">›</div>
 </div>
 
 <h2>🎮 CHOOSE YOUR GAME</h2>
+<div class="sub">Your entertainment starts here</div>
 
 <div class="games" id="games">
  <a class="game" href="/game/">
   <span class="emoji">🎡</span><b>Lucky Spin</b>
-  <small>Play Now ›</small>
+  <small>PLAY NOW ›</small>
  </a>
  <a class="game" href="/scratch/">
   <span class="emoji">🎁</span><b>Scratch Card</b>
-  <small>Play Now ›</small>
+  <small>PLAY NOW ›</small>
  </a>
  <a class="game" href="/lucky-number/">
   <span class="emoji">🔢</span><b>Lucky Number</b>
-  <small>Play Now ›</small>
+  <small>PLAY NOW ›</small>
  </a>
  <a class="game" href="/tic-tac-toe/">
   <span class="emoji">⭕</span><b>Tic Tac Toe</b>
-  <small>Play Now ›</small>
+  <small>PLAY NOW ›</small>
  </a>
  <a class="game" href="/memory-match/">
   <span class="emoji">🧠</span><b>Memory Match</b>
-  <small>Play Now ›</small>
+  <small>PLAY NOW ›</small>
  </a>
  <a class="game" href="/number-puzzle/">
   <span class="emoji">🔷</span><b>Number Puzzle</b>
-  <small>Play Now ›</small>
+  <small>PLAY NOW ›</small>
  </a>
 </div>
 
-<a class="profile" href="/profile/">👤 MY PROFILE　›</a>
+<a class="profile" href="/profile/">👑 MY PROFILE　›</a>
 
-<footer>© 2026 AJMOL VIP RUMMY</footer>
+<footer>
+ © 2026 AJMOL VIP RUMMY<br>
+ Play for fun with virtual coins
+</footer>
 
 <nav>
  <a href="/home/"><span>🏠</span>Home</a>
@@ -122,7 +177,10 @@ nav span{display:block;font-size:23px;margin-bottom:4px}
 function claimBonus(){
  let last=Number(localStorage.getItem("ajmol_daily_bonus_time")||0);
  let remaining=86400000-(Date.now()-last);
- if(last&&remaining>0){alert("Daily Bonus already claimed! Come back after 24 hours.");return;}
+ if(last&&remaining>0){
+  alert("Daily Bonus already claimed! Come back after 24 hours.");
+  return;
+ }
  let coins=Number(localStorage.getItem("ajmol_coins"));
  if(!Number.isFinite(coins)||coins<=0)coins=1000;
  coins+=100;
