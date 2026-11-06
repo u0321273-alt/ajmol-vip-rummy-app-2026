@@ -158,6 +158,10 @@ function demoLogin() {
   window.location.href = "/home/";
 }
 
+// Keep demo login active on this device
+if (localStorage.getItem("ajmol_demo_logged_in") === "true") {
+  window.location.replace("/home/");
+}
 </script>
 
 <script>
